@@ -148,18 +148,18 @@ textarea{min-height:90px;resize:vertical}
 .hint{font-size:.82rem;color:#6b7a70;margin-top:6px}
 .field-error{font-size:.85rem;color:var(--error);margin-top:6px;display:none}
 
-/* day picker */
+/* day-of-week picker */
 .day-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-  max-width:420px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  max-width:480px;
 }
 .day-grid button{
-  aspect-ratio:1;
+  padding:10px 18px;
   border:1.5px solid var(--line);
   background:#fff;
-  border-radius:8px;
+  border-radius:100px;
   font-family:'Archivo',sans-serif;
   font-weight:500;
   font-size:.9rem;
@@ -294,7 +294,7 @@ footer{
   <section class="node" id="subscribe">
     <h2>Monthly subscription</h2>
     <p class="price">$50 / month &middot; $60 with vase</p>
-    <p class="section-note">One custom arrangement every month, delivered on the day you pick. Choose a hand-tied bouquet ready for your own vase, or a full vase arrangement, done and ready to display. Tell me your favorites and I'll build around them.</p>
+    <p class="section-note">One custom arrangement every month, delivered on your preferred weekday. Choose a hand-tied bouquet ready for your own vase, or a full vase arrangement, done and ready to display. Tell me your favorites and I'll build around them.</p>
 
     <form id="subForm" novalidate>
       <div>
@@ -326,10 +326,10 @@ footer{
         <input type="text" id="s-colors" name="colors" required placeholder="Blush and cream, or bold jewel tones...">
       </div>
       <div>
-        <label id="dayLabel">Delivery day of the month</label>
+        <label id="dayLabel">Preferred delivery day</label>
         <div class="day-grid" role="group" aria-labelledby="dayLabel" id="dayGrid"></div>
-        <p class="hint">Days 1&ndash;28 so every month works.</p>
-        <p class="field-error" id="dayError">Pick a delivery day.</p>
+        <p class="hint">Deliveries run Monday through Friday. This is your preference, not a guaranteed exact date every month.</p>
+        <p class="field-error" id="dayError">Pick a preferred day.</p>
         <input type="hidden" name="deliveryDay" id="s-day">
       </div>
       <div>
@@ -440,22 +440,22 @@ document.querySelectorAll('.gallery img').forEach(img => {
   img.addEventListener('error', () => { img.closest('figure').style.display = 'none'; });
 });
 
-// day-of-month picker
+// day-of-week picker
 const grid = document.getElementById('dayGrid');
 const dayInput = document.getElementById('s-day');
-for (let d = 1; d <= 28; d++) {
+['Monday','Tuesday','Wednesday','Thursday','Friday'].forEach(day => {
   const b = document.createElement('button');
   b.type = 'button';
-  b.textContent = d;
+  b.textContent = day;
   b.setAttribute('aria-pressed', 'false');
   b.addEventListener('click', () => {
     grid.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
     b.setAttribute('aria-pressed', 'true');
-    dayInput.value = d;
+    dayInput.value = day;
     document.getElementById('dayError').style.display = 'none';
   });
   grid.appendChild(b);
-}
+});
 
 async function submitForm(form, type, statusEl, validate) {
   if (!form.reportValidity()) return;
